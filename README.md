@@ -18,7 +18,7 @@ Demoscene is a computer subculture and artistic movement that emerged in the 198
 
 The demoscene began in the 1980s on home computer platforms like the Commodore 64 and Amiga. Early demos were often created by "cracking" groups to showcase their skills in breaking copy protection on games and software. Over time, the focus shifted from cracking to artistic expression and technical prowess. Demoscene groups formed, competing to create the most impressive demos at events known as "demoscene parties."
 
-![demoparty](images/demoparty.jpeg)
+![demoparty](images/demoparty.jpg)
 
 [Image Source](https://www.teodor.no/commodore/the-demo-scene)
 
@@ -77,21 +77,32 @@ af & 0 & 0 & 0 \\
 
 3d affine transformation matrices can then be used for translating, scaling, or rotating the points before projecting them:
 
-$ R_x(\theta) = \begin{pmatrix}
-1 & 0 & 0 & 0 \\
-0 & cos(\theta) & sin(\theta) & 0 \\
-0 & -sin(\theta) & cos(\theta) & 0 \\
-0 & 0 & 0 & 1
-\end{pmatrix}
-$, 
-$ R_y(\theta) = \begin{pmatrix}
+$$
+\begin{bmatrix}
+    a \\
+    b \\
+    c \\
+    \end{bmatrix}
+$$
+
+$R_x(\theta) =
+\begin{pmatrix}
+    1 & 0 & 0 & 0 \\
+    0 & cos(\theta) & sin(\theta) & 0 \\
+    0 & -sin(\theta) & cos(\theta) & 0 \\
+    0 & 0 & 0 & 1
+    \end{pmatrix}
+$,
+$ R_y(\theta) =
+\begin{pmatrix}
 cos(\theta) & 0 & -sin(\theta) & 0 \\
 0 & 1 & 0 & 0 \\
 sin(\theta) & 0 & cos(\theta) & 0 \\
 0 & 0 & 0 & 1
 \end{pmatrix}
 $,
-$ R_z(\theta) = \begin{pmatrix}
+$ R_z(\theta) =
+\begin{pmatrix}
 cos(\theta) & -sin(\theta) & 0 & 0 \\
 sin(\theta) & cos(\theta) & 0 & 0 \\
 0 & 0 & 1 & 0 \\
@@ -122,3 +133,6 @@ At the end of the project, everyone from the class gathered for our own mini-dem
 My demo won second place :D
 
 ![demoparty](images/cmu_demoparty.jpg)
+
+$$
+$$
