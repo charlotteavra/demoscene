@@ -78,6 +78,7 @@ af & 0 & 0 & 0 \\
 3d affine transformation matrices can then be used for translating, scaling, or rotating the points before projecting them:
 
 $$
+A=
 \begin{pmatrix}
     a \\
     b \\
