@@ -106,16 +106,16 @@ R_z(\theta) =
     \end{pmatrix}
 $$
 
-## **GIFs**
+## **Visuals**
 
 Although I used an OpenGL graphics library, I coded the projection, translation, rotation, and scaling matricies from scratch. Each triangle in the cube is simply 3 points drawn using the `GL_LINE_LOOP` OpenGL primitive and projected into the virtual 3D space. Each frame, the points are rotated about the $z$ and $x$ axes, the $z$ coordinate is adjusted to create the effect of the cube moving closer, the buffer is cleared, the program waits a 10 milisecond sleep time, and the lines are drawn again in the cubes next state.
 
 ![First Scene](gifs/1.gif)
 
-For the grid, I defined the initial locations of 6 horizontal and 10 vertical lines. For the movement of the horizontal lines, instead of using a projection matrix, I instead gave the horizontal lines an initial velocity and an acceleration to simulate them moving faster as they approach the viewer. Each frame, the $y$ coordinate of each horizontal line is updated using:
+For the grid, I defined the initial locations of 6 horizontal and 10 vertical lines. For the movement of the horizontal lines, instead of using a projection matrix, I instead gave the horizontal lines an initial velocity and an acceleration to simulate them appearing to move faster as they approach the viewer. Each frame, the $y$ coordinate of each horizontal line is updated using:
 
 ```
-y1 += (vel * t) + (0.5 * accel * pow(t, 2)); // accelerate y value of horizontal line toward the bottom of the screen
+y1 += (vel * t) + (0.5 * accel * pow(t, 2));
 y2 += (vel * t) + (0.5 * accel * pow(t, 2));
 ```
 
@@ -142,6 +142,8 @@ else
 
 For the last scene, although this technique would not have been possible if I were creating a demo to be played on old hardware, I added a .png background that eventually pans up to the ending screen.
 
+![Third Scene](gifs/3.gif)
+
 I used the same technique to animate the octehedron as I did the cube except I restricted rotation and translation to the $y$ axis.
 
-![Third Scene](gifs/3.gif)
+![The End](images/the_end.png)
