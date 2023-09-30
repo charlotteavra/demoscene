@@ -34,90 +34,109 @@ I was inspired by the more geometric-looking graphics in the example demos I wat
 
 ## Audio
 
-While demos can feature a wide variety of music genres, demos on older platforms like the Commodore 64 and Amiga will often use chiptune music, characterized by the distinctive sound of vintage computer and video game hardware like the NES (Nintendo Entertainment System), Commodore 64, Atari 2600, and Game Boy. I chose [Density & Time - MAZE](https://www.youtube.com/watch?v=OuRvOCf9mJ4&ab_channel=FreeMusic).
+While demos can feature a wide variety of music genres, demos on older platforms like the Commodore 64 and Amiga will often use chiptune music, characterized by the distinctive sound of vintage computer and video game hardware like the NES (Nintendo Entertainment System), Commodore 64, Atari 2600, and Game Boy. I chose [Density & Time - MAZE](https://www.youtube.com/watch?v=OuRvOCf9mJ4&ab_channel=FreeMusic) due to its catchy beat and chiptune sound.
 
 ## 3D graphics from Scratch
 
-It is possible to represent any 2D shape using only triangles. I used this principle to create a rotating cube on a 2D screen writing the original object coordinates, projection matrix, and rotation matrices from scratch in C++.
-
-![Polygon Mesh](images/polygon_mesh.png)
+To make some simple moving geometric art using only C++, I first defined the shapes I was creating as a mesh of triangles. I first made a rotating cube on the 2D screen by definging the original object coordinates, projecting them into the virtual space using a projection matrix, and rotating it around various axes using rotation matrices.
 
 To do this, I first normalized the screen space as shown below.
 
 ![Screen Space](images/normalize.png)
 
-Normalizing the screen also ensures that the field of view is not limited to a rectangle but instead a space defined by theta. As theat increases, the field of view increases and has the effect of zooming out. On the other hand, decreasing theta narrows the field of view and has the effect of zooming in. therefore has the following effect on the x and y coordinates of the object that is being projected.
+Normalizing the screen also ensures that the field of view is not limited to a rectangle but instead a space defined by a variable $\theta$. As $\theta$ increases, as shown in the above image, the field of view increases and has the effect of zooming out. On the other hand, decreasing $\theta$ narrows the field of view and has the effect of zooming in and therefore has the following effect on the x and y coordinates of the object that is being projected.
 
-$(x, y) \Rightarrow (\dfrac{\dfrac{w}{k}*\dfrac{1}{tan(\theta/2)}}{z})x, (\dfrac{\dfrac{1}{tan(\theta/2)}}{z})$
+$$(x, y) \Rightarrow (\dfrac{\dfrac{w}{k}*\dfrac{1}{tan(\theta/2)}}{z})x, (\dfrac{\dfrac{1}{tan(\theta/2)}}{z})$$
 
-When objects are further away, they appear to move less. This means the $x$ and $y$ coordinates are also affected by the depth. This is expressed in Eq. 1 by dividing both $x$ and $y$ by $z$.
+When objects are further away, they appear to move less. This means the $x$ and $y$ coordinates are also affected by the depth. This is expressed in the above equation by dividing both $x$ and $y$ by $z$.
 
-To define $z$, virtual points $z_{near}$ and $z_{far}$ are first defined to normalize and create a scaling factor for the input $z$ values of the desired shape.
+To define $z$, we first define virtual points $z_{near}$ and $z_{far}$ to normalize and create a scaling factor for the input $z$ values of the desired shape.
 
-$scaling factor = z_{normalized} - offset$
-
-$scaling factor = \dfrac{z_{far}}{z_{far}-z_{near}} - \dfrac{z_{far}*z_{near}}{z_{far}-z_{near}}$
+$$scaling factor = z_{normalized} - offset = \dfrac{z_{far}}{z_{far}-z_{near}} - \dfrac{z_{far}*z_{near}}{z_{far}-z_{near}}$$
 
 Thus,
 
-$(x, y, z) \Rightarrow \left((\dfrac{\dfrac{w}{k}*\dfrac{1}{tan(\theta/2)}}{z})x, (\dfrac{\dfrac{1}{tan(\theta/2)}}{z}), \dfrac{z_{far}}{z_{far}-z_{near}}z - \dfrac{z_{far}*z_{near}}{z_{far}-z_{near}}\right)$
+$$(x, y, z) \Rightarrow \left((\dfrac{\dfrac{w}{k}*\dfrac{1}{tan(\theta/2)}}{z})x, (\dfrac{\dfrac{1}{tan(\theta/2)}}{z}), \dfrac{z_{far}}{z_{far}-z_{near}}z - \dfrac{z_{far}*z_{near}}{z_{far}-z_{near}}\right)$$
 
-Let aspect ratio, $a = \dfrac{w}{h}$, field of view, $f = \dfrac{1}{tan(\theta/2)}$, and $q = z_{normalized} = \dfrac{z_{far}}{z_{far}-z_{near}}$, such that $(x, y, z)$ simplifies to:
+To simplify this a bit let aspect ratio, $a = \dfrac{w}{h}$, field of view, $f = \dfrac{1}{tan(\theta/2)}$, and $q = z_{normalized} = \dfrac{z_{far}}{z_{far}-z_{near}}$, therefore:
 
-$(x, y, z) \Rightarrow \dfrac{af}{z}x, \dfrac{f}{z}y, qz - qz_{near}$
+$$(x, y, z) \Rightarrow \dfrac{af}{z}x, \dfrac{f}{z}y, qz - qz_{near}$$
 
-Such that now we have a projection matrix:
+Now we have a projection matrix:
 
-$ M = \begin{pmatrix}
-af & 0 & 0 & 0 \\
-0 & f & 0 & 0 \\
-0 & 0 & q & 1 \\
-0 & 0 & -qz_n & 0
-\end{pmatrix} $
+$$
+M =
+\begin{pmatrix}
+    af & 0 & 0 & 0 \\
+    0 & f & 0 & 0 \\
+    0 & 0 & q & 1 \\
+    0 & 0 & -qz_n & 0
+    \end{pmatrix}
+$$
 
 3d affine transformation matrices can then be used for translating, scaling, or rotating the points before projecting them:
 
 $$
-A=
-\begin{pmatrix}
-    a \\
-    b \\
-    c \\
-    \end{pmatrix}
-$$
-
-$R_x(\theta) =
+R_x(\theta) =
 \begin{pmatrix}
     1 & 0 & 0 & 0 \\
     0 & cos(\theta) & sin(\theta) & 0 \\
     0 & -sin(\theta) & cos(\theta) & 0 \\
     0 & 0 & 0 & 1
     \end{pmatrix}
-$,
-$ R_y(\theta) =
+$$
+
+$$
+R_y(\theta) =
 \begin{pmatrix}
-cos(\theta) & 0 & -sin(\theta) & 0 \\
-0 & 1 & 0 & 0 \\
-sin(\theta) & 0 & cos(\theta) & 0 \\
-0 & 0 & 0 & 1
-\end{pmatrix}
-$,
-$ R_z(\theta) =
+    cos(\theta) & 0 & -sin(\theta) & 0 \\
+    0 & 1 & 0 & 0 \\
+    sin(\theta) & 0 & cos(\theta) & 0 \\
+    0 & 0 & 0 & 1
+    \end{pmatrix}
+$$
+
+$$
+R_z(\theta) =
 \begin{pmatrix}
-cos(\theta) & -sin(\theta) & 0 & 0 \\
-sin(\theta) & cos(\theta) & 0 & 0 \\
-0 & 0 & 1 & 0 \\
-0 & 0 & 0 & 1
-\end{pmatrix}
-$
+    cos(\theta) & -sin(\theta) & 0 & 0 \\
+    sin(\theta) & cos(\theta) & 0 & 0 \\
+    0 & 0 & 1 & 0 \\
+    0 & 0 & 0 & 1
+    \end{pmatrix}
+$$
 
 ## **GIFs**
 
-Although I used an OpenGL graphics library, I wrote all of the projection, translation, rotation, and scaling matricies from scratch. Each line in the cube is drawn between 2 points and rendered. Then a transform is applied to each point in the cube, the buffer is cleared, and the lines are drawn again in the cubes next state.
+Although I used an OpenGL graphics library, I coded the projection, translation, rotation, and scaling matricies from scratch. Each triangle in the cube is simply 3 points drawn using the `GL_LINE_LOOP` OpenGL primitive and projected into the virtual 3D space. Each frame, the points are rotated about the $z$ and $x$ axes, the $z$ coordinate is adjusted to create the effect of the cube moving closer, the buffer is cleared, the program waits a 10 milisecond sleep time, and the lines are drawn again in the cubes next state.
 
 ![First Scene](gifs/1.gif)
 
-One of the key elements of the vaporwave aesthetic is the large sun. I used shading to create a neon pink to light blue gradient.
+For the grid, I defined the initial locations of 6 horizontal and 10 vertical lines. For the movement of the horizontal lines, instead of using a projection matrix, I instead gave the horizontal lines an initial velocity and an acceleration to simulate them moving faster as they approach the viewer. Each frame, the $y$ coordinate of each horizontal line is updated using:
+
+```
+y1 += (vel * t) + (0.5 * accel * pow(t, 2)); // accelerate y value of horizontal line toward the bottom of the screen
+y2 += (vel * t) + (0.5 * accel * pow(t, 2));
+```
+
+where:
+
+```
+const double vel = 3, accel = 0.0001, dt = 0.01;
+```
+
+One of the key elements of the vaporwave aesthetic is the large sun. I used the `GL_POLYGON` OpenGL primitive with 64 points to create a "circle" and used a radial shading technique using `glShadeModel(GL_SMOOTH)` where I defined the color of a section of the polygon based on the angle the point makes from the first point:
+
+```
+if (angle == 0.5 * YS_PI)
+{
+    glColor3ub(252, 20, 252); // neon pink
+}
+else
+{
+    glColor3ub(22, 255, 255); // aqua
+}
+```
 
 ![Second Scene](gifs/2.gif)
 
@@ -126,14 +145,3 @@ For the last scene, although this technique would not have been possible if I we
 I used the same technique to animate the octehedron as I did the cube except I restricted rotation and translation to the $y$ axis.
 
 ![Third Scene](gifs/3.gif)
-
-## **CMU's Mini-Demoparty**
-
-At the end of the project, everyone from the class gathered for our own mini-demoparty. We rated each demo and the professor announced the top three winners.
-
-My demo won second place :D
-
-![demoparty](images/cmu_demoparty.jpg)
-
-$$
-$$
