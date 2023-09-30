@@ -78,11 +78,11 @@ af & 0 & 0 & 0 \\
 3d affine transformation matrices can then be used for translating, scaling, or rotating the points before projecting them:
 
 $$
-\begin{bmatrix}
+\begin{pmatrix}
     a \\
     b \\
     c \\
-    \end{bmatrix}
+    \end{pmatrix}
 $$
 
 $R_x(\theta) =
