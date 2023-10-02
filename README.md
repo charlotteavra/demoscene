@@ -2,6 +2,10 @@
 
 ### A non-interactive demonstration of audio and visual programming using OpenGL
 
+Check out my Youtube video here:
+
+[![video](https://img.youtube.com/vi/I9ETPMkormY/0.jpg)](https://www.youtube.com/watch?v=I9ETPMkormY)
+
 ---
 
 > Graphics and sound library from [captainys](https://github.com/captainys)
